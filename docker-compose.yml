@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  api:
+    build: .
+    container_name: shakespearean_scholar_api
+    ports:
+      - "8000:8000"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src
+      - ./api:/app/api
+    depends_on:
+      - chroma
+    restart: unless-stopped
+    networks:
+      - shakespeare_network
+
+  # ChromaDB (optional standalone service)
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: shakespearean_scholar_chroma
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data/chroma_db:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+    networks:
+      - shakespeare_network
+
+  # Streamlit Frontend (optional)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: shakespearean_scholar_frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - shakespeare_network
+
+networks:
+  shakespeare_network:
+    driver: bridge
+
+volumes:
+  chroma_data:
