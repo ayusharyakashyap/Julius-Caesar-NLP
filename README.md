@@ -54,33 +54,40 @@ Every answer is grounded strictly in the retrieved text chunks.
 
 Below is the architecture diagram, preserved exactly as provided:
 
-┌─────────────────────────────────────────────────────────────┐
-│                        User Interface                        │
-│                   (Streamlit Frontend)                       │
-└─────────────────────┬───────────────────────────────────────┘
-                      │ HTTP Requests
-                      ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   FastAPI Backend (main_final.py)            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │         Hybrid RAG Pipeline (rag_pipeline_final.py)  │   │
-│  │  1. Query Embedding (all-MiniLM-L6-v2)               │   │
-│  │  2. Initial Retrieval (ChromaDB, top 20)             │   │
-│  │  3. Re-ranking (CrossEncoder ms-marco-MiniLM-L-6-v2) │   │
-│  │  4. Context Assembly (Top 5 chunks)                  │   │
-│  │  5. LLM Generation (Gemini 2.5 Flash)                │   │
-│  └──────────────────────────────────────────────────────┘   │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────────────────┐
-│             ChromaDB Vector Store (data/chroma_db_s3/)       │
-│  Collection: julius_caesar_s3_intro_plus_window             │
-│  - Dialogue chunks with ±2 speech context windows           │
-│  - Scene intro/synopsis paragraphs                          │
-│  - External study notes (SparkNotes/LitCharts style)        │
-│  - Metadata: act, scene, speaker, source, content_type      │
-└─────────────────────────────────────────────────────────────┘
+                       ┌──────────────────────────────────────────┐
+                       │              User Interface              │
+                       │             (Streamlit UI)               │
+                       └───────────────────┬──────────────────────┘
+                                           │
+                                           │  HTTP Request (Query)
+                                           ▼
+                       ┌──────────────────────────────────────────┐
+                       │           FastAPI Backend API            │
+                       │              (main_final.py)             │
+                       └───────────────────┬──────────────────────┘
+                                           │
+                                           ▼
+ ┌──────────────────────────────────────────────────────────────────────────────────────┐
+ │                          Hybrid RAG Pipeline (rag_pipeline_final.py)                 │
+ │--------------------------------------------------------------------------------------│
+ │  1. Query Embedding (all-MiniLM-L6-v2)                                               │
+ │  2. Initial Similarity Search (ChromaDB, top 20)                                      │
+ │  3. Cross-Encoder Re-ranking (ms-marco-MiniLM-L-6-v2)                                 │
+ │  4. Select Top 5 Chunks as Final Context                                              │
+ │  5. LLM Answer Generation (Gemini 2.5 Flash)                                          │
+ └──────────────────────────────────────────────────────────────────────────────────────┘
+                                           │
+                                           ▼
+                       ┌──────────────────────────────────────────┐
+                       │      ChromaDB Vector Store (Local)       │
+                       │  Collection: julius_caesar_s3_intro_plus_window  │
+                       │                                                │
+                       │  • Dialogue chunks (±2-speech context)         │
+                       │  • Scene introductions                         │
+                       │  • External study notes                        │
+                       │  • Metadata: act, scene, speaker, type         │
+                       └──────────────────────────────────────────┘
+
 
 ---
 
