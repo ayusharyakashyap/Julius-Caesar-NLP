@@ -1,4 +1,4 @@
-# Retrieval-Augmented Generation (RAG) System for *Julius Caesar*
+# Retrieval-Augmented Generation (RAG) System for Julius Caesar
 
 **Pranav Laddhad – IMT2022074**  
 **Ayush Arya Kashyap – IMT2022129**  
