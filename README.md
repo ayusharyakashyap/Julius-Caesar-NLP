@@ -1,5 +1,9 @@
 # Retrieval-Augmented Generation (RAG) System for *Julius Caesar*
 
+Pranav Laddhad - IMT2022074
+Ayush Arya Kashyap - IMT2022129
+Uttam Hamsaraj - IMT2022524
+
 This repository contains a complete, production-ready Retrieval-Augmented Generation (RAG) system designed specifically for Shakespeare’s *The Tragedy of Julius Caesar*. The objective of this project is to build an academically reliable, explainable question-answering system that bases every generated answer on actual passages from the play. This removes hallucinations and ensures precision suitable for ICSE-level literature work.
 
 The system combines dialogue chunks, contextual windows, scene introductions, and external notes to build a rich retrieval base. A hybrid retrieval pipeline is used to identify, rank, assemble, and provide accurate grounded answers.
