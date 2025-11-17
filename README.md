@@ -75,12 +75,6 @@ Below is the architecture diagram, preserved exactly as provided:
 
 
 
-
-
-
-
-
-
 ---
 
 ## 4. Component Explanations (Human-Readable)
