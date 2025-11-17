@@ -8,13 +8,13 @@ This project implements a full-stack, containerized Retrieval-Augmented Generati
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        User Interface                        │
-│                   (Streamlit Frontend)                       │
+│                        User Interface                       │
+│                   (Streamlit Frontend)                      │
 └─────────────────────┬───────────────────────────────────────┘
                       │ HTTP Requests
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      FastAPI Backend                         │
+│                      FastAPI Backend                        │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │             RAG Pipeline Orchestrator                │   │
 │  │  1. Query Embedding                                  │   │
@@ -26,7 +26,7 @@ This project implements a full-stack, containerized Retrieval-Augmented Generati
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    ChromaDB Vector Store                     │
+│                    ChromaDB Vector Store                    │
 │  - Embedded chunks from Julius Caesar                       │
 │  - Metadata: act, scene, speaker, type                      │
 └─────────────────────────────────────────────────────────────┘
