@@ -53,33 +53,38 @@ Every answer is grounded strictly in the retrieved text chunks.
 ## 3. Full System Architecture
 
 Below is the architecture diagram, preserved exactly as provided:
+
+## Architecture
+
+```
 ┌─────────────────────────────────────────────────────────────┐
-│                        User Interface                        │
-│                   (Streamlit Frontend)                       │
+│                        User Interface                        │
+│                   (Streamlit Frontend)                       │
 └─────────────────────┬───────────────────────────────────────┘
-                      │ HTTP Requests
-                      ▼
+                      │ HTTP Requests
+                      ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   FastAPI Backend (main_final.py)            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │         Hybrid RAG Pipeline (rag_pipeline_final.py)  │   │
-│  │  1. Query Embedding (all-MiniLM-L6-v2)               │   │
-│  │  2. Initial Retrieval (ChromaDB, top 20)             │   │
-│  │  3. Re-ranking (CrossEncoder ms-marco-MiniLM-L-6-v2) │   │
-│  │  4. Context Assembly (Top 5 chunks)                  │   │
-│  │  5. LLM Generation (Gemini 2.5 Flash)                │   │
-│  └──────────────────────────────────────────────────────┘   │
+│                   FastAPI Backend (main_final.py)            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │         Hybrid RAG Pipeline (rag_pipeline_final.py)  │   │
+│  │  1. Query Embedding (all-MiniLM-L6-v2)               │   │
+│  │  2. Initial Retrieval (ChromaDB, top 20)             │   │
+│  │  3. Re-ranking (CrossEncoder ms-marco-MiniLM-L-6-v2) │   │
+│  │  4. Context Assembly (Top 5 chunks)                  │   │
+│  │  5. LLM Generation (Gemini 2.5 Flash)                │   │
+│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────┬───────────────────────────────────────┘
-                      │
-                      ▼
+                      │
+                      ▼
 ┌─────────────────────────────────────────────────────────────┐
-│             ChromaDB Vector Store (data/chroma_db_s3/)       │
-│  Collection: julius_caesar_s3_intro_plus_window             │
-│  - Dialogue chunks with ±2 speech context windows           │
-│  - Scene intro/synopsis paragraphs                          │
-│  - External study notes (SparkNotes/LitCharts style)        │
-│  - Metadata: act, scene, speaker, source, content_type      │
+│             ChromaDB Vector Store (data/chroma_db_s3/)       │
+│  Collection: julius_caesar_s3_intro_plus_window             │
+│  - Dialogue chunks with ±2 speech context windows           │
+│  - Scene intro/synopsis paragraphs                          │
+│  - External study notes (SparkNotes/LitCharts style)        │
+│  - Metadata: act, scene, speaker, source, content_type      │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
