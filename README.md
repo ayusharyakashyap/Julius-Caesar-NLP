@@ -54,15 +54,14 @@ Every answer is grounded strictly in the retrieved text chunks.
 
 Below is the architecture diagram, preserved exactly as provided:
 
-
 ┌─────────────────────────────────────────────────────────────┐
-│                        User Interface                       │
-│                   (Streamlit Frontend)                      │
+│                        User Interface                        │
+│                   (Streamlit Frontend)                       │
 └─────────────────────┬───────────────────────────────────────┘
                       │ HTTP Requests
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   FastAPI Backend (main_final.py)           │
+│                   FastAPI Backend (main_final.py)            │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │         Hybrid RAG Pipeline (rag_pipeline_final.py)  │   │
 │  │  1. Query Embedding (all-MiniLM-L6-v2)               │   │
@@ -75,15 +74,13 @@ Below is the architecture diagram, preserved exactly as provided:
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│             ChromaDB Vector Store (data/chroma_db_s3/)      │
+│             ChromaDB Vector Store (data/chroma_db_s3/)       │
 │  Collection: julius_caesar_s3_intro_plus_window             │
 │  - Dialogue chunks with ±2 speech context windows           │
 │  - Scene intro/synopsis paragraphs                          │
 │  - External study notes (SparkNotes/LitCharts style)        │
 │  - Metadata: act, scene, speaker, source, content_type      │
 └─────────────────────────────────────────────────────────────┘
-
-
 
 ---
 
