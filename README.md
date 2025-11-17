@@ -178,7 +178,8 @@ The result is a consistent, high-quality dataset ready for embedding.
 5. Add the required data files to the `data/` directory:
    - julius-caesar.pdf  
    - julius-caeser-notes.pdf  
-   - chunks_unstructured_new3.json  
+   - chunks
+   - chromaDB
 
 ---
 
