@@ -1,46 +1,56 @@
-# Retrieval-Augmented Generation (RAG) System for Julius Caesar NLP Project
+# Retrieval-Augmented Generation (RAG) System for *Julius Caesar*
 
-This repository contains a complete, end-to-end Retrieval-Augmented Generation (RAG) pipeline developed specifically for Shakespeare’s *Julius Caesar*. The purpose of this project is to create an explainable, accurate question-answering system that does not hallucinate, and instead grounds every generated answer in the actual text of the play.
+This repository contains a complete, production-ready Retrieval-Augmented Generation (RAG) system designed specifically for Shakespeare’s *The Tragedy of Julius Caesar*. The objective of this project is to build an academically reliable, explainable question-answering system that bases every generated answer on actual passages from the play. This removes hallucinations and ensures precision suitable for ICSE-level literature work.
 
+The system combines dialogue chunks, contextual windows, scene introductions, and external notes to build a rich retrieval base. A hybrid retrieval pipeline is used to identify, rank, assemble, and provide accurate grounded answers.
 
 ---
 
 ## 1. Project Overview
 
-Large Language Models (LLMs) are powerful, but they can hallucinate when asked about detailed content from literature. To avoid this problem, this project uses a RAG architecture. Instead of allowing the LLM to answer freely, the system retrieves relevant passages directly from *Julius Caesar* and uses them as grounding context.
+Large Language Models often hallucinate when answering detailed literature-based questions. To prevent this, the system implements a Hybrid RAG pipeline. Instead of letting the LLM generate answers using memorized or approximate knowledge, the system retrieves the most relevant passages from a structured database of Julius Caesar content.
 
-The LLM then generates answers only after reading the retrieved text. This makes the system factual, reliable, and aligned with Shakespeare's original writing.
+This ensures that every answer remains:
 
-This project includes:
-- Document ingestion  
-- Text cleaning and preprocessing  
-- Intelligent semantic chunking  
-- Embedding generation  
-- Storage in a vector database (ChromaDB)  
-- Semantic search and retrieval  
-- Context assembly and ranking  
-- Grounded LLM answer generation  
-- A FastAPI backend to expose the system
+- text-accurate  
+- non-hallucinated  
+- traceable  
+- academically reliable  
+
+The project includes:
+
+- Full ingestion of Julius Caesar (dialogues, scene intros, notes)  
+- Text cleaning and structured metadata extraction  
+- Semantic chunking with contextual windows  
+- Transformer-based embedding generation  
+- Vector indexing with ChromaDB  
+- Two-stage retrieval (semantic + reranking)  
+- Grounded answer generation using Gemini  
+- FastAPI backend  
+- Optional Streamlit user interface  
 
 ---
 
 ## 2. What the System Does
 
-The RAG system is able to:
-- Load and process the complete play of *Julius Caesar*  
-- Convert the cleaned text into meaningful semantic chunks  
-- Represent each chunk as an embedding  
-- Store embeddings in a vector index for efficient similarity search  
-- Accept user questions as input  
-- Retrieve the most relevant parts of the play  
-- Assemble these into a coherent context  
-- Generate an accurate, grounded final answer using the LLM  
+The system functions as a complete end-to-end retrieval-augmented generation pipeline. It:
 
-This design ensures that every answer can be traced back to known source text, which eliminates hallucination and maintains literary correctness.
+- Loads the full text of the play and supporting notes  
+- Cleans and preprocesses the raw content  
+- Breaks the text into meaningful, retrieval-friendly chunks  
+- Converts chunks into embeddings  
+- Stores embeddings in ChromaDB  
+- Accepts a user query and embeds it  
+- Retrieves the most contextually relevant chunks  
+- Reranks them with a cross-encoder  
+- Assembles the final grounding context  
+- Generates a citation-rich, text-supported answer via Gemini  
+
+Every answer is grounded strictly in the retrieved text chunks.
 
 ---
 
-## 3. System Architecture
+## 3. Full System Architecture
 
 Below is the architecture diagram, preserved exactly as provided:
 
@@ -77,72 +87,118 @@ Below is the architecture diagram, preserved exactly as provided:
 
 ---
 
-## 4. Component Explanations (Human-Readable)
+---
 
-### A. Document Ingestion  
-The system begins by loading the complete text of *Julius Caesar* from a trusted source. The ingestion component ensures that the play is accessible in a clean, uniform format that the later stages can work with.
+## 4. Component Explanations
 
-### B. Preprocessing  
-The raw text contains irregular formatting, character names, stage directions, and spacing issues.  
-The preprocessing module cleans the text while preserving literary meaning. It removes noise, normalizes spacing, and prepares the text for chunking.
+### A. Document Ingestion
+The system loads the entire text of *Julius Caesar* along with external study-note content. These documents form the knowledge base used by the retrieval system.
 
-### C. Chunking  
-Chunking is essential because an LLM cannot process an entire book at once.  
-The text is broken into meaningful segments—dialogues, paragraphs, or thematic sections—rather than random fixed-size cuts. This ensures that retrieval returns useful and coherent information.
+### B. Preprocessing and Cleaning
+Raw literary text contains noise such as broken formatting, inconsistent stage directions, and unwanted characters. The system performs:
 
-### D. Embedding Generation  
-Each chunk is converted into an embedding: a vector representation that captures semantic meaning.  
-This allows the system to search semantically, not just by keyword.
+- artifact removal  
+- whitespace normalization  
+- extraction of speakers and stage directions  
+- reconstruction of act/scene metadata  
 
-### E. Vector Store (ChromaDB)  
-FAISS stores all embeddings and provides fast similarity search.  
-Even with thousands of chunks, the system can find relevant passages quickly.
+This prepares the text for structured chunking.
 
-### F. Query Embedding and Retrieval  
-When the user asks a question, the query is also converted into an embedding.  
-The system then retrieves the chunks with the closest semantic meaning.
+### C. Semantic Chunking
+The play is divided into semantically meaningful chunks, usually based on speeches or short sections of dialogue. Each chunk contains:
 
-### G. Context Assembly and Ranking  
-The best-matching chunks are assembled into a single context block.  
-Optional reranking improves the ordering and relevance of retrieved text.
+- speech text  
+- ±2-speech context  
+- speaker metadata  
+- act/scene information  
+- content type (dialogue, intro, analysis)  
 
-### H. LLM Answer Generation  
-The final answer is created by giving the LLM the retrieved context along with the user’s question.  
-This ensures:
-- grounded answers  
-- zero hallucination  
-- explanations based only on Shakespeare’s text  
+This helps the retriever locate relevant, context-rich information.
+
+### D. Embedding Generation
+Each chunk is encoded into a dense vector using all-MiniLM-L6-v2. These embeddings represent the meaning of each chunk for retrieval.
+
+### E. Vector Store (ChromaDB)
+All chunk embeddings are stored in ChromaDB. This vector index supports:
+
+- persistent storage  
+- metadata filtering  
+- fast similarity search  
+
+### F. Query Embedding and Retrieval
+User queries are embedded, and the most similar 20 chunks are retrieved using vector similarity.
+
+### G. Cross-Encoder Reranking
+The retrieved candidates are reranked using ms-marco-MiniLM-L-6-v2 to improve precision. The top 5 final chunks are selected.
+
+### H. LLM Answer Generation
+Gemini 2.5 Flash receives:
+
+- the user question  
+- the top 5 ranked chunks  
+
+and generates a grounded, citation-aware answer.
 
 ---
 
-## 5. API Layer
+## 5. Data ETL Pipeline
 
-The backend is served using FastAPI.  
-It exposes endpoints for:
-- submitting a query  
-- viewing retrieved text chunks  
-- refreshing or rebuilding the knowledge base  
-- performing system checks  
+The ETL pipeline resolves multiple issues found in raw text:
 
-The API makes it easy to integrate the RAG system with user interfaces, evaluation scripts, or demonstration notebooks.
+- incorrect speaker extraction  
+- malformed or misplaced stage directions  
+- inconsistent act/scene boundaries  
+- overlapping chunks  
+- NaN or infinite numeric values in metadata  
 
----
-
-## 6. Why This RAG Approach Works Well
-
-Using RAG for literature processing gives several advantages:
-- Answers remain tightly connected to the original source  
-- Students and evaluators can trace every claim back to Shakespeare  
-- The model cannot generate events that do not exist in the play  
-- The system is transparent, interpretable, and academically rigorous  
-
-This makes it ideal for university NLP projects and literature-focused applications.
+The result is a consistent, high-quality dataset ready for embedding.
 
 ---
 
-## 7. Conclusion
+## 6. Installation and Setup
 
-This project demonstrates a complete, fully functional RAG system tailored to *Julius Caesar*.  
-The pipeline is cleanly structured, easy to understand, and fully explainable. The README provides a detailed narrative of how every component works together to produce reliable, grounded answers.
+### Prerequisites
 
-This foundation can be expanded into a larger Shakespeare Q&A system, a classroom teaching tool, or a general-purpose literary analysis engine.
+- Python 3.11+  
+- Google Gemini API key  
+- ChromaDB  
+- Optional: Streamlit, Docker  
+
+### Steps
+
+1. Clone the repository  
+2. Create a virtual environment  
+3. Install dependencies via requirements.txt  
+4. Create a `.env` file containing your Gemini API key  
+5. Add the required data files to the `data/` directory:
+   - julius-caesar.pdf  
+   - julius-caeser-notes.pdf  
+   - chunks_unstructured_new3.json  
+
+---
+
+## 7. Running the System
+
+### Step 1: ETL and Indexing  
+Run the ETL script and indexing script to create:
+
+- chunks_s3_intro_plus_window.json  
+- chroma_db_s3/ vector index  
+
+### Step 2: Start the FastAPI Server  
+The backend API will be available at:
+
+- http://localhost:8000/query  
+- http://localhost:8000/docs  
+
+### Step 3: Query the System  
+You can query using Python, curl, or any API client.
+
+### Step 4: Run Evaluation  
+The evaluation pipeline generates:
+
+- EVALUATION.md  
+- CSV and JSON evaluation outputs  
+
+---
+
