@@ -2,7 +2,6 @@
 
 This repository contains a complete, end-to-end Retrieval-Augmented Generation (RAG) pipeline developed specifically for Shakespeare’s *Julius Caesar*. The purpose of this project is to create an explainable, accurate question-answering system that does not hallucinate, and instead grounds every generated answer in the actual text of the play.
 
-The system is designed to be modular, readable, and educational. Anyone reading this repository should clearly understand how each stage of the pipeline works, why it exists, and how it contributes to producing high-quality grounded answers.
 
 ---
 
@@ -17,7 +16,7 @@ This project includes:
 - Text cleaning and preprocessing  
 - Intelligent semantic chunking  
 - Embedding generation  
-- Storage in a vector database (FAISS)  
+- Storage in a vector database (ChromaDB)  
 - Semantic search and retrieval  
 - Context assembly and ranking  
 - Grounded LLM answer generation  
@@ -82,30 +81,6 @@ Below is the architecture diagram, preserved exactly as provided:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 
 ## 4. Component Explanations (Human-Readable)
@@ -125,7 +100,7 @@ The text is broken into meaningful segments—dialogues, paragraphs, or thematic
 Each chunk is converted into an embedding: a vector representation that captures semantic meaning.  
 This allows the system to search semantically, not just by keyword.
 
-### E. Vector Store (FAISS)  
+### E. Vector Store (ChromaDB)  
 FAISS stores all embeddings and provides fast similarity search.  
 Even with thousands of chunks, the system can find relevant passages quickly.
 
@@ -171,18 +146,7 @@ This makes it ideal for university NLP projects and literature-focused applicati
 
 ---
 
-## 7. Future Work
-
-Further work could include:
-- Adding speaker metadata for each line or chunk  
-- Implementing a reranking model for improved retrieval  
-- Building an interactive interface for classroom use  
-- Expanding the dataset to multiple Shakespeare plays  
-- Supporting multi-turn conversation with memory  
-
----
-
-## 8. Conclusion
+## 7. Conclusion
 
 This project demonstrates a complete, fully functional RAG system tailored to *Julius Caesar*.  
 The pipeline is cleanly structured, easy to understand, and fully explainable. The README provides a detailed narrative of how every component works together to produce reliable, grounded answers.
