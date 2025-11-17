@@ -71,16 +71,16 @@ Below is the architecture diagram, preserved exactly as provided:
  │                          Hybrid RAG Pipeline (rag_pipeline_final.py)                 │
  │--------------------------------------------------------------------------------------│
  │  1. Query Embedding (all-MiniLM-L6-v2)                                               │
- │  2. Initial Similarity Search (ChromaDB, top 20)                                      │
- │  3. Cross-Encoder Re-ranking (ms-marco-MiniLM-L-6-v2)                                 │
- │  4. Select Top 5 Chunks as Final Context                                              │
- │  5. LLM Answer Generation (Gemini 2.5 Flash)                                          │
+ │  2. Initial Similarity Search (ChromaDB, top 20)                                     │
+ │  3. Cross-Encoder Re-ranking (ms-marco-MiniLM-L-6-v2)                                │
+ │  4. Select Top 5 Chunks as Final Context                                             │
+ │  5. LLM Answer Generation (Gemini 2.5 Flash)                                         │
  └──────────────────────────────────────────────────────────────────────────────────────┘
                                            │
                                            ▼
-                       ┌──────────────────────────────────────────┐
-                       │      ChromaDB Vector Store (Local)       │
-                       │  Collection: julius_caesar_s3_intro_plus_window  │
+                       ┌────────────────────────────────────────────────┐
+                       │      ChromaDB Vector Store (Local)             │
+                       │  julius_caesar_s3_intro_plus_window            │
                        │                                                │
                        │  • Dialogue chunks (±2-speech context)         │
                        │  • Scene introductions                         │
